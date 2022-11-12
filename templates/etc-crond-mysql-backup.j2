@@ -1,0 +1,15 @@
+#!/bin/bash
+
+NOW=$(date +%Y%m%d%H%M%S)
+MYSQL_BACKUP=${NOW}_{{ ansible_hostname }}.sql.gz
+
+/usr/bin/mysqldump --all-databases | gzip -c > {{ mysql_backup_dir }}/${MYSQL_BACKUP}
+
+{% if storage_resource_uri is defined and blob_sas_token is defined %}
+{{ azcopy_bin_path }}/azcopy copy "{{ mysql_backup_dir }}/${MYSQL_BACKUP}" "{{ storage_resource_uri }}/${MYSQL_BACKUP}?{{ blob_sas_token }}"
+{% endif %}
+
+# Remove backup files that are 3 month old
+rm -f {{ mysql_backup_dir }}/$(date +%Y%m%d* --date='3 month ago')_{{ ansible_hostname }}.sql.gz
+
+

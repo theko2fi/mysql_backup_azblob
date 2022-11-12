@@ -1,0 +1,12 @@
+---
+# defaults file for mysql_backup
+mysql_backup_dir: /db/backup
+backup_user: root
+azcopy_bin_path: "{{ mysql_backup_dir }}"
+
+#cron job schedule
+minute: "01"
+hour: "01"
+day: "*"
+month: "*"
+weekday: "*"

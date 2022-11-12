@@ -1,0 +1,41 @@
+---
+# tasks file for mysql-backup
+- name: create backup directory
+  become: true
+  file:
+    path: "{{ mysql_backup_dir }}"
+    state: directory
+    owner: "{{ backup_user }}"
+    group: "{{ backup_user }}"
+    mode: 0700
+
+- name: create backup script
+  become: true
+  template:
+    src: etc-crond-mysql-backup.j2
+    dest: "{{ mysql_backup_dir }}/mysql-backup.sh"
+    mode: 0755
+    owner: "{{ backup_user }}"
+    group: "{{ backup_user }}"
+
+- name: Configure backup cron job.
+  cron:
+    name: "Backup cron job"
+    minute: "{{ minute }}"
+    hour: "{{ hour }}"
+    day: "{{ day }}"
+    month: "{{ month }}"
+    weekday: "{{ weekday }}"
+    user: "{{ backup_user }}"
+    job: "{{ mysql_backup_dir }}/mysql-backup.sh"
+    state: "present"
+
+- name: install azcopy
+  ansible.builtin.include_role:
+    name: ../eduardolmedeiros.azcopy
+  vars:
+    azcopy_username: "{{ backup_user }}"
+    azcopy_group: "{{ backup_user }}"
+  when:
+    - storage_resource_uri is defined
+    - blob_sas_token is defined
