@@ -28,37 +28,38 @@ All of these parameters are optional, but if you want to enable the uploading to
   - blob_sas_token
 
 Examples Playbook
-----------------
+-----------------
 
 This sample playbook will dump all mysql/mariadb databases, every day at 01:01 and store the file to `/backup/dumps` directory :
 
-    - hosts: all
-      roles:
-         - role: theko2fi.mysql_backup_azblob
-      vars:
-        mysql_backup_dir: /backup/dumps
-
+```
+  - hosts: all
+    roles:
+       - role: theko2fi.mysql_backup_azblob
+    vars:
+      mysql_backup_dir: /backup/dumps
+````
 If you would like to schedule the backup to a different time, let's say every day at 04:02, you could do this:
 
 ```
-    - hosts: all
-      roles:
-         - role: theko2fi.mysql_backup_azblob
-      vars:
-        mysql_backup_dir: /backup/dumps
-        minute: 04
-        hour: 02
+  - hosts: all
+    roles:
+       - role: theko2fi.mysql_backup_azblob
+    vars:
+      mysql_backup_dir: /backup/dumps
+      minute: 04
+      hour: 02
 ```
 Example of playbook with upload to Azure blob storage enabled:
 
 ```
-    - hosts: all
-      become: true
-      roles:
-         - role: theko2fi.mysql_backup_azblob
-      vars:
-        blob_sas_token: "sp=rcw&st=2022-11-10T21:47:37Z&se=2022-11-11T05:47:37Z&spr=https&sv=2021-06-08&sr=c&sig=YWJjZGVmZw%3d%3d&sig=Rcp6gQRfV7WDlURdVTqCa%2bqEArnfJxDgE%2bKH3TCChIs%3d"
-        storage_resource_uri: "https://backupblobexample.blob.core.windows.net/dbbackup"
+  - hosts: all
+    become: true
+    roles:
+       - role: theko2fi.mysql_backup_azblob
+    vars:
+      blob_sas_token: "sp=rcw&st=2022-11-10T21:47:37Z&se=2022-11-11T05:47:37Z&spr=https&sv=2021-06-08&sr=c&sig=YWJjZGVmZw%3d%3d&sig=Rcp6gQRfV7WDlURdVTqCa%2bqEArnfJxDgE%2bKH3TCChIs%3d"
+      storage_resource_uri: "https://backupblobexample.blob.core.windows.net/dbbackup"
 ```
 
 License
