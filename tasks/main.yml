@@ -8,6 +8,7 @@
     owner: "{{ backup_user }}"
     group: "{{ backup_user }}"
     mode: 0700
+    recurse: yes
 
 - name: create backup script
   become: true
@@ -19,6 +20,7 @@
     group: "{{ backup_user }}"
 
 - name: Configure backup cron job.
+  become: true
   cron:
     name: "Backup cron job"
     minute: "{{ minute }}"
